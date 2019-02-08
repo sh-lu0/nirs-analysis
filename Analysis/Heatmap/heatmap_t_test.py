@@ -35,9 +35,11 @@ fig = plt.figure()
 frames = []
 
 df_line = df['pvalue']
+
 view_data = [[0, 0, 0, 0, df_line[0], 0, df_line[1], 0, df_line[2], 0, 0, 0, 0]]
 view_data = np.append(view_data,
-             [[0, 0, 0, df_line[3], 0, df_line[4], 0, df_line[5], 0, df_line[6], 0, 0, 0],
+             [
+               [0, 0, 0, df_line[3], 0, df_line[4], 0, df_line[5], 0, df_line[6], 0, 0, 0],
                [0, 0, 0, 0, df_line[7], 0, df_line[8], 0, df_line[9], 0, 0, 0, 0],
                [0, df_line[10], 0, df_line[11], 0, df_line[12], 0, df_line[13], 0, df_line[14], 0, df_line[15], 0],
                [df_line[16], 0, df_line[17], 0, df_line[18], 0, df_line[19], 0, df_line[20], 0, df_line[21], 0, df_line[22]],
@@ -54,13 +56,22 @@ view_data = np.append(view_data,
 #            yticklabels=False, xticklabels=False,mask=mask,cmap="bwr_r")  # 数値ありの時はannot=True
 #plt.subplot(2,1,2)
 
+fig = plt.figure(1)
+plt.subplot(1,1,1)
+sns.heatmap(view_data, vmax=0.05, fmt='1.4f', linewidths=.5, center=0,
+           yticklabels=False, xticklabels=False, mask=mask,cmap="Reds_r")  # 数値ありの時はannot=True
+fig.savefig('t_0.05.png')
+
+fig = plt.figure(2)
+plt.subplot(1,1,1)
 sns.heatmap(view_data, vmax=0.01, fmt='1.4f', linewidths=.5, center=0,
            yticklabels=False, xticklabels=False, mask=mask,cmap="Reds_r")  # 数値ありの時はannot=True
+fig.savefig('t_0.01.png')
 
 # plt.show()
-f = plt.plot()
-frames.append([f])
-plt.savefig('t_0.01.png')
+#f = plt.plot()
+#frames.append([f])
+#plt.savefig('t_0.06.png')
 
 input("Enter to close")
 # plt.close()

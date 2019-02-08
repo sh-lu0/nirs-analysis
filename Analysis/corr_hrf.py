@@ -16,7 +16,7 @@ HRFをサンプリングする時間のベクトル
 
 peak_delay：float、オプション
 ピークの遅れ
-6
+
 
 under_delay：float、オプション
 アンダーシュートの遅延
@@ -42,8 +42,8 @@ True
 """
 相関係数
 """
-# t = np.arange(0, 526, 1)
-# ff = hrf.spm_hrf_compat(t, peak_delay=298, under_delay=100, peak_disp=193, under_disp=17, p_u_ratio=6, normalize=True)
+# t = np.arange(0, 701, 1)
+# ff = hrf.spm_hrf_compat(t, peak_delay=298, under_delay=473, peak_disp=17, under_disp=17, p_u_ratio=3, normalize=True)
 # plt.plot(ff, "blue")
 # plt.savefig('corr.png')
 
@@ -53,6 +53,9 @@ os.chdir("/Users/chiaki/Desktop/")
 
 print('読み込むファイル名を入力してください')
 file_name = input()
+
+print('ピーク時間(行)：')
+peak_time = int(input())
 
 result_f = pd.DataFrame(columns=[])
 
@@ -96,33 +99,26 @@ df.columns = ['index', 'index2','time','ch1_oxy', 'ch1_deoxy',
                 ]
 
 def main():
-  t = np.arange(0, 526, 1)
-  ff = hrf.spm_hrf_compat(t, peak_delay=298, under_delay=386, peak_disp=17, under_disp=17, p_u_ratio=6, normalize=True)
-  print(len(ff))
+  # t = np.arange(0, 701, 1)
+  t = np.arange(0, peak_time, 1)
+  ff = hrf.spm_hrf_compat(t, peak_delay=peak_time, under_delay=473, peak_disp=5, under_disp=5, p_u_ratio=3, normalize=True)
+  # print(len(ff))
 
   for i in range(68):
     corr_box = []
     for j in range(5):
       time_1 = int(j*701)
-      time_2 = int(j*701 + 526)
+      time_2 = int(j*701 + peak_time)
       nirs = df[time_1:time_2]['ch' + str(i + 1) + '_oxy']
-      # print(len(nirs))
-      # print(len(square))
 
       # 相関
       corr = np.corrcoef(ff, nirs)
       corr_box.append(corr[0, 1])
 
-      plt.plot(ff, "blue")
-      plt.savefig('corr.png')
-
       # plt.plot(nirs, "red")
-      # plt.plot(df[time_1:time_2]['time'], square, "blue")
-
-      # print(len(ff))
       # plt.plot(ff, "blue")
 
-      # plt.savefig('corr.png')
+      # plt.savefig('corr_hrf.png')
 
     result_f['ch' + str(i + 1) + '_corr'] = corr_box
     result_f.to_csv("hrf_corr_" + file_name + ".csv")
